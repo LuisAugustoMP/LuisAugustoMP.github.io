@@ -182,11 +182,11 @@
     /* stacked list layout for iPhone or iPad in portrait */
     .interactive-layer.stacked {
       display: block;
-      padding: 12px 0;
+      padding-top: var(--stack-padding, 72px);
+      padding-bottom: 12px;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       max-height: 100vh;
-      --stack-padding: 72px;
     }
     .interactive-layer.stacked::before {
       content: '';
@@ -194,7 +194,7 @@
       left: 0;
       right: 0;
       top: 0;
-      height: var(--stack-padding);
+      height: var(--stack-padding, 72px);
       background: linear-gradient(to bottom, rgba(18,18,20,0.96), rgba(18,18,20,0));
       z-index: 99;
       pointer-events: none;
@@ -204,6 +204,9 @@
       top: 4vh;
       left: 5vw;
       z-index: 101;
+      background: rgba(18,18,20,0.9);
+      padding: 8px 12px;
+      border-radius: 8px;
     }
     .interactive-layer.stacked .physics-card {
       position: static !important;
