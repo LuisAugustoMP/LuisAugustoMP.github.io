@@ -472,7 +472,7 @@
         if (enable) {
           // compute header height and set padding so list starts below it
           const rect = headerEl.getBoundingClientRect();
-          const pad = Math.round(rect.bottom + 8);
+          const pad = Math.round(rect.bottom + 8 + 80);
           layerEl.style.setProperty('--stack-padding', pad + 'px');
           layerEl.style.overflowY = 'auto';
           layerEl.classList.add('stacked');
