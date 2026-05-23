@@ -188,25 +188,11 @@
       -webkit-overflow-scrolling: touch;
       max-height: 100vh;
     }
-    .interactive-layer.stacked::before {
-      content: '';
-      position: fixed;
-      left: 0;
-      right: 0;
-      top: 0;
-      height: var(--stack-padding, 72px);
-      background: linear-gradient(to bottom, rgba(18,18,20,0.96), rgba(18,18,20,0));
-      z-index: 99;
-      pointer-events: none;
-    }
     .ui-header.stacked-header {
       position: fixed;
       top: 4vh;
       left: 5vw;
       z-index: 101;
-      background: rgba(18,18,20,0.9);
-      padding: 8px 12px;
-      border-radius: 8px;
     }
     .interactive-layer.stacked .physics-card {
       position: static !important;
@@ -293,6 +279,78 @@
       <div class="card-content">
         <h2>PlExport</h2>
         <span>Automação para bibliotecas Plex.</span>
+      </div>
+    </a>
+
+    <!-- Placeholder cards for testing -->
+    <a class="physics-card" href="#" data-width="320" data-height="120">
+      <i class="fa-solid fa-star card-icon"></i>
+      <div class="card-content">
+        <h2>Placeholder 1</h2>
+        <span>Botão de teste placeholder.</span>
+      </div>
+    </a>
+    <a class="physics-card" href="#" data-width="320" data-height="120">
+      <i class="fa-solid fa-star card-icon"></i>
+      <div class="card-content">
+        <h2>Placeholder 2</h2>
+        <span>Botão de teste placeholder.</span>
+      </div>
+    </a>
+    <a class="physics-card" href="#" data-width="320" data-height="120">
+      <i class="fa-solid fa-star card-icon"></i>
+      <div class="card-content">
+        <h2>Placeholder 3</h2>
+        <span>Botão de teste placeholder.</span>
+      </div>
+    </a>
+    <a class="physics-card" href="#" data-width="320" data-height="120">
+      <i class="fa-solid fa-star card-icon"></i>
+      <div class="card-content">
+        <h2>Placeholder 4</h2>
+        <span>Botão de teste placeholder.</span>
+      </div>
+    </a>
+    <a class="physics-card" href="#" data-width="320" data-height="120">
+      <i class="fa-solid fa-star card-icon"></i>
+      <div class="card-content">
+        <h2>Placeholder 5</h2>
+        <span>Botão de teste placeholder.</span>
+      </div>
+    </a>
+    <a class="physics-card" href="#" data-width="320" data-height="120">
+      <i class="fa-solid fa-star card-icon"></i>
+      <div class="card-content">
+        <h2>Placeholder 6</h2>
+        <span>Botão de teste placeholder.</span>
+      </div>
+    </a>
+    <a class="physics-card" href="#" data-width="320" data-height="120">
+      <i class="fa-solid fa-star card-icon"></i>
+      <div class="card-content">
+        <h2>Placeholder 7</h2>
+        <span>Botão de teste placeholder.</span>
+      </div>
+    </a>
+    <a class="physics-card" href="#" data-width="320" data-height="120">
+      <i class="fa-solid fa-star card-icon"></i>
+      <div class="card-content">
+        <h2>Placeholder 8</h2>
+        <span>Botão de teste placeholder.</span>
+      </div>
+    </a>
+    <a class="physics-card" href="#" data-width="320" data-height="120">
+      <i class="fa-solid fa-star card-icon"></i>
+      <div class="card-content">
+        <h2>Placeholder 9</h2>
+        <span>Botão de teste placeholder.</span>
+      </div>
+    </a>
+    <a class="physics-card" href="#" data-width="320" data-height="120">
+      <i class="fa-solid fa-star card-icon"></i>
+      <div class="card-content">
+        <h2>Placeholder 10</h2>
+        <span>Botão de teste placeholder.</span>
       </div>
     </a>
 
@@ -427,6 +485,23 @@
             item.element.style.left = '';
             item.element.style.top = '';
           });
+
+          // Add scroll fade effect
+          layerEl.addEventListener('scroll', () => {
+            const scrollTop = layerEl.scrollTop;
+            const fadeStartY = 0;
+            const fadeEndY = 80; // fade range in pixels
+            bodiesMap.forEach(item => {
+              const el = item.element;
+              const rect = el.getBoundingClientRect();
+              const distFromTop = rect.top;
+              let opacity = 1;
+              if (distFromTop < fadeEndY) {
+                opacity = Math.max(0, (distFromTop - fadeStartY) / (fadeEndY - fadeStartY));
+              }
+              el.style.opacity = opacity;
+            });
+          });
         } else {
           layerEl.classList.remove('stacked');
           layerEl.style.removeProperty('--stack-padding');
@@ -435,6 +510,7 @@
           bodiesMap.forEach(item => {
             Body.setStatic(item.body, false);
             item.element.style.position = 'absolute';
+            item.element.style.opacity = '1';
           });
         }
       }
