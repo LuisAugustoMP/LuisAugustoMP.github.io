@@ -109,12 +109,9 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, index) => {
+    entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        // Add a slight delay based on index for staggered effect
-        setTimeout(() => {
-          entry.target.classList.add('visible');
-        }, index * 100);
+        entry.target.classList.add('visible');
         observer.unobserve(entry.target);
       }
     });
@@ -124,4 +121,9 @@ document.addEventListener('DOMContentLoaded', () => {
   cards.forEach(card => {
     observer.observe(card);
   });
+
+  // Backup reveal: ensure all cards are visible after 2 seconds regardless of scroll
+  setTimeout(() => {
+    cards.forEach(card => card.classList.add('visible'));
+  }, 2000);
 });
