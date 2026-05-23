@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Luís Augusto • Projetos</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family: Arial, sans-serif;
+      background:#0d1117;
+      color:white;
+      padding:40px;
+    }
+
+    h1{
+      margin-bottom:10px;
+      font-size:42px;
+    }
+
+    p{
+      color:#8b949e;
+      margin-bottom:40px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:20px;
+    }
+
+    .card{
+      background:#161b22;
+      border:1px solid #30363d;
+      border-radius:16px;
+      padding:24px;
+      text-decoration:none;
+      color:white;
+      transition:0.2s;
+    }
+
+    .card:hover{
+      transform:translateY(-4px);
+      border-color:#58a6ff;
+    }
+
+    .card h2{
+      margin-bottom:10px;
+      font-size:22px;
+    }
+
+    .card span{
+      color:#8b949e;
+      font-size:14px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Luís Augusto</h1>
+  <p>Projetos hospedados no GitHub Pages</p>
+
+  <div class="grid">
+
+    <a class="card" href="/Portfolio/">
+      <h2>Portfolio</h2>
+      <span>Portfólio principal</span>
+    </a>
+
+    <a class="card" href="/mediavault/">
+      <h2>mediavault</h2>
+      <span>Media manager</span>
+    </a>
+
+    <a class="card" href="/Ibava-Curso/">
+      <h2>Ibava-Curso</h2>
+      <span>Curso online</span>
+    </a>
+
+    <a class="card" href="/sobral-memoria/">
+      <h2>sobral-memoria</h2>
+      <span>Projeto histórico</span>
+    </a>
+
+    <a class="card" href="/BiofiliaHospitalar/">
+      <h2>BiofiliaHospitalar</h2>
+      <span>Biofilia aplicada</span>
+    </a>
+
+    <a class="card" href="/curriculo/">
+      <h2>curriculo</h2>
+      <span>Currículo online</span>
+    </a>
+
+    <a class="card" href="/PlExport/">
+      <h2>PlExport</h2>
+      <span>Exportador Plex</span>
+    </a>
+
+  </div>
+
+</body>
+</html>
