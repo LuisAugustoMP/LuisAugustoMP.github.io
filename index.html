@@ -60,6 +60,11 @@
       width: 100%;
       height: 100%;
       z-index: 10;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      padding: 20px;
+      align-content: start;
     }
 
     .ui-header {
@@ -141,6 +146,37 @@
       border-color: var(--card-hover-border);
     }
 
+    .physics-toggle {
+      position: fixed;
+      top: 5vh;
+      right: 5vw;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-accent);
+      font-size: 1.2rem;
+      cursor: pointer;
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .physics-toggle:hover {
+      border-color: var(--card-hover-border);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    @media (max-width: 768px) and (orientation: landscape) {
+      .physics-toggle {
+        display: flex;
+      }
+    }
+
     .card-icon {
       font-size: 1.8rem;
       color: var(--text-primary);
@@ -187,6 +223,10 @@
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       max-height: 100vh;
+      grid-template-columns: unset;
+      gap: unset;
+      padding-left: unset;
+      padding-right: unset;
     }
     .ui-header.stacked-header {
       position: fixed;
@@ -211,6 +251,10 @@
   <canvas id="space-canvas"></canvas>
 
   <div class="interactive-layer" id="interactive-layer">
+    
+    <button id="physics-toggle" class="physics-toggle">
+      <i class="fa-solid fa-play"></i>
+    </button>
     
     <header class="ui-header">
       <div class="terminal-prompt">
@@ -472,7 +516,7 @@
         if (enable) {
           // compute header height and set padding so list starts below it
           const rect = headerEl.getBoundingClientRect();
-          const pad = Math.round(rect.bottom + 8 + 80);
+          const pad = Math.round(rect.bottom + 10);
           layerEl.style.setProperty('--stack-padding', pad + 'px');
           layerEl.style.overflowY = 'auto';
           layerEl.classList.add('stacked');
@@ -489,8 +533,8 @@
           // Add scroll fade effect
           layerEl.addEventListener('scroll', () => {
             const scrollTop = layerEl.scrollTop;
-            const fadeStartY = 0;
-            const fadeEndY = 80; // fade range in pixels
+            const fadeStartY = -60;
+            const fadeEndY = 40; // fade range in pixels, starts before header
             bodiesMap.forEach(item => {
               const el = item.element;
               const rect = el.getBoundingClientRect();
@@ -528,22 +572,62 @@
       window.addEventListener('orientationchange', updateStackingOnChange);
       window.addEventListener('resize', updateStackingOnChange);
 
-          const layer = document.getElementById('interactive-layer');
-          let mouseConstraint = null;
-          let dragged = false;
-          if (!isMobile) {
-            const mouse = Mouse.create(layer);
-            mouseConstraint = MouseConstraint.create(engine, {
-              mouse: mouse,
-              constraint: { stiffness: 0.2, render: { visible: false } }
-            });
-
-            mouse.pixelRatio = window.devicePixelRatio;
+      // Physics toggle for landscape mode
+      let physicsActive = false;
+      const toggleBtn = document.getElementById('physics-toggle');
+      let mouseConstraint = null;
+      let mouse = null;
+      
+      // Create mouse/mouseConstraint if on desktop
+      if (!isMobile) {
+        const layer = document.getElementById('interactive-layer');
+        mouse = Mouse.create(layer);
+        mouseConstraint = MouseConstraint.create(engine, {
+          mouse: mouse,
+          constraint: { stiffness: 0.2, render: { visible: false } }
+        });
+        mouse.pixelRatio = window.devicePixelRatio;
+      }
+      
+      function togglePhysics() {
+        physicsActive = !physicsActive;
+        if (physicsActive) {
+          toggleBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+          toggleBtn.style.color = 'var(--text-accent)';
+          // Enable physics: make cards moveable
+          bodiesMap.forEach(item => {
+            Body.setStatic(item.body, false);
+          });
+          if (mouseConstraint && !isMobile) {
             World.add(engine.world, mouseConstraint);
-
+            const dragged = false;
             Matter.Events.on(mouseConstraint, 'startdrag', () => { dragged = true; });
             Matter.Events.on(mouseConstraint, 'enddrag', () => { setTimeout(() => dragged = false, 50); });
           }
+        } else {
+          toggleBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+          toggleBtn.style.color = 'var(--text-accent)';
+          // Disable physics and snap cards back to grid positions
+          if (mouseConstraint && !isMobile) {
+            World.remove(engine.world, mouseConstraint);
+          }
+          bodiesMap.forEach((item, index) => {
+            Body.setStatic(item.body, true);
+            const col = index % 2;
+            const row = Math.floor(index / 2);
+            const gridX = 140 + col * 320;
+            const gridY = 120 + row * 150;
+            Body.setPosition(item.body, { x: gridX, y: gridY });
+            Body.setVelocity(item.body, { x: 0, y: 0 });
+            Body.setAngularVelocity(item.body, 0);
+          });
+        }
+      }
+
+      toggleBtn.addEventListener('click', togglePhysics);
+
+          const layer = document.getElementById('interactive-layer');
+          let dragged = false;
 
           domCards.forEach(card => {
             card.addEventListener('click', (e) => { if (dragged) e.preventDefault(); });
@@ -622,7 +706,16 @@
         }
 
         bodiesMap.forEach((item) => {
-          if (isStacked) return; // CSS handles layout when stacked
+          if (isStacked) {
+            // In stacked mode, CSS handles layout unless physics is active
+            if (!physicsActive) return;
+          } else {
+            // In grid mode, only apply physics if physicsActive
+            if (!physicsActive) {
+              item.element.style.transform = 'none';
+              return;
+            }
+          }
           const { element, body, width, height } = item;
           const x = body.position.x - width / 2;
           const y = body.position.y - height / 2;
