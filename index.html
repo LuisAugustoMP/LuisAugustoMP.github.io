@@ -169,6 +169,16 @@
       .physics-card { padding: 16px; gap: 12px; }
       .card-icon { font-size: 1.5rem; }
     }
+    @media (max-width: 420px) {
+      .terminal-prompt { font-size: 0.9rem; }
+      .physics-card { padding: 12px; gap: 8px; border-radius: 10px; }
+      .card-icon { font-size: 1.2rem; min-width: 28px; }
+      .card-content h2 { font-size: 1rem; }
+      .card-content span { font-size: 0.75rem; }
+      .social-btn { padding: 8px 12px; font-size: 0.8rem; }
+      .ui-header { left: 4vw; top: 4vh; }
+      .physics-card { max-width: calc(100% - 32px); }
+    }
   </style>
 </head>
 <body>
@@ -299,14 +309,17 @@
       const domCards = document.querySelectorAll('.physics-card');
       const bodiesMap = [];
       const isMobile = window.innerWidth <= 768;
-      const scaleRatio = isMobile ? 0.85 : 1;
+      const isSmallMobile = window.innerWidth <= 420;
+      const scaleRatio = isSmallMobile ? 0.6 : isMobile ? 0.85 : 1;
 
       domCards.forEach((cardEl, index) => {
-        let w = parseInt(cardEl.dataset.width) * scaleRatio;
-        let h = parseInt(cardEl.dataset.height) * scaleRatio;
+        let baseW = parseInt(cardEl.dataset.width);
+        let baseH = parseInt(cardEl.dataset.height);
+        let w = Math.min(baseW * scaleRatio, window.innerWidth - 32);
+        let h = baseH * scaleRatio;
 
         const startX = (window.innerWidth / 2) + ((Math.random() - 0.5) * window.innerWidth * 0.5);
-        const startY = (window.innerHeight * 0.3) + (index * 40);
+        const startY = (window.innerHeight * (isSmallMobile ? 0.22 : 0.3)) + (index * (isSmallMobile ? 28 : 40));
 
         const body = Bodies.rectangle(startX, startY, w, h, {
           chamfer: { radius: 12 },
