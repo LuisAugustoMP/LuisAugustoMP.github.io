@@ -3,107 +3,90 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Luís Augusto • Projetos</title>
-
-  <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-    }
-
-    body{
-      font-family: Arial, sans-serif;
-      background:#0d1117;
-      color:white;
-      padding:40px;
-    }
-
-    h1{
-      margin-bottom:10px;
-      font-size:42px;
-    }
-
-    p{
-      color:#8b949e;
-      margin-bottom:40px;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-      gap:20px;
-    }
-
-    .card{
-      background:#161b22;
-      border:1px solid #30363d;
-      border-radius:16px;
-      padding:24px;
-      text-decoration:none;
-      color:white;
-      transition:0.2s;
-    }
-
-    .card:hover{
-      transform:translateY(-4px);
-      border-color:#58a6ff;
-    }
-
-    .card h2{
-      margin-bottom:10px;
-      font-size:22px;
-    }
-
-    .card span{
-      color:#8b949e;
-      font-size:14px;
-    }
-  </style>
+  <title>Luís Augusto • Frontend Specialist</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <h1>Luís Augusto</h1>
-  <p>Projetos hospedados no GitHub Pages</p>
+  <div id="bg-glow"></div>
 
-  <div class="grid">
+  <div class="container">
+    <header>
+      <h1>Luís Augusto</h1>
+      <p class="subtitle">Frontend Specialist & Creative Developer. Explorando as fronteiras do design e performance através de projetos experimentais.</p>
+    </header>
 
-    <a class="card" href="/Portfolio/">
-      <h2>Portfolio</h2>
-      <span>Portfólio principal</span>
-    </a>
+    <main class="grid">
 
-    <a class="card" href="/mediavault/">
-      <h2>mediavault</h2>
-      <span>Media manager</span>
-    </a>
+      <a class="card" href="/Portfolio/">
+        <div class="arrow">↗</div>
+        <div>
+          <h2>Portfolio</h2>
+          <span>Experiência profissional e vitrine de habilidades técnicas.</span>
+        </div>
+      </a>
 
-    <a class="card" href="/Ibava-Curso/">
-      <h2>Ibava-Curso</h2>
-      <span>Curso online</span>
-    </a>
+      <a class="card" href="/mediavault/">
+        <div class="arrow">↗</div>
+        <div>
+          <h2>mediavault</h2>
+          <span>Gerenciador de mídia inteligente focado em organização e performance.</span>
+        </div>
+      </a>
 
-    <a class="card" href="/sobral-memoria/">
-      <h2>sobral-memoria</h2>
-      <span>Projeto histórico</span>
-    </a>
+      <a class="card" href="/Ibava-Curso/">
+        <div class="arrow">↗</div>
+        <div>
+          <h2>Ibava-Curso</h2>
+          <span>Plataforma de ensino online com foco em UX e acessibilidade.</span>
+        </div>
+      </a>
 
-    <a class="card" href="/BiofiliaHospitalar/">
-      <h2>BiofiliaHospitalar</h2>
-      <span>Biofilia aplicada</span>
-    </a>
+      <a class="card" href="/sobral-memoria/">
+        <div class="arrow">↗</div>
+        <div>
+          <h2>sobral-memoria</h2>
+          <span>Preservação digital e resgate histórico através de interface imersiva.</span>
+        </div>
+      </a>
 
-    <a class="card" href="/curriculo/">
-      <h2>curriculo</h2>
-      <span>Currículo online</span>
-    </a>
+      <a class="card" href="/BiofiliaHospitalar/">
+        <div class="arrow">↗</div>
+        <div>
+          <h2>BiofiliaHospitalar</h2>
+          <span>Estudo de caso sobre design biofílico aplicado a ambientes de saúde.</span>
+        </div>
+      </a>
 
-    <a class="card" href="/PlExport/">
-      <h2>PlExport</h2>
-      <span>Exportador Plex</span>
-    </a>
+      <a class="card" href="/curriculo/">
+        <div class="arrow">↗</div>
+        <div>
+          <h2>curriculo</h2>
+          <span>Currículo interativo projetado para máxima clareza e impacto visual.</span>
+        </div>
+      </a>
 
+      <a class="card" href="/PlExport/">
+        <div class="arrow">↗</div>
+        <div>
+          <h2>PlExport</h2>
+          <span>Ferramenta de exportação e automação para bibliotecas Plex.</span>
+        </div>
+      </a>
+
+    </main>
+
+    <footer>
+      <p>© 2026 Luís Augusto • Crafted with precision</p>
+    </footer>
   </div>
 
+  <script src="script.js"></script>
 </body>
 </html>
