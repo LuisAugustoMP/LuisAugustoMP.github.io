@@ -433,12 +433,11 @@
         const headerBottom = headerEl.getBoundingClientRect().bottom;
         
         const maxGridWidth = 1200;
-        const gapX = 32;
-        const gapY = 32;
-        const startY = headerBottom + 60; // Folga do cabeçalho
+        const gapX = 80; // Espaçamento X significativamente aumentado
+        const gapY = 80; // Espaçamento Y significativamente aumentado
+        const startY = headerBottom + 60; 
         const availW = Math.min(containerW - 32, maxGridWidth);
         
-        // 1. Agrupa os botões em linhas (envelopamento) com base em suas larguras reais
         const rows = [];
         let currentRow = [];
         let currentRowWidth = 0;
@@ -462,21 +461,20 @@
           rows.push({ items: currentRow, width: currentRowWidth, height: currentRowMaxHeight });
         }
         
-        // 2. Calcula as posições X e Y exatas distribuindo cada linha centralizada
         let currentY = startY;
         
         rows.forEach(row => {
-          let currentX = (containerW - row.width) / 2; // Centraliza a linha atual horizontalmente
+          let currentX = (containerW - row.width) / 2; 
           
           row.items.forEach(item => {
             targets.push({
-              x: currentX + item.width / 2, // Posicionamento pelo centro do corpo da física
+              x: currentX + item.width / 2, 
               y: currentY + item.height / 2 
             });
             currentX += item.width + gapX;
           });
           
-          currentY += row.height + gapY; // Pula para a próxima linha
+          currentY += row.height + gapY; 
         });
         
         return targets;
