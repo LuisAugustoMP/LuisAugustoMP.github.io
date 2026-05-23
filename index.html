@@ -179,6 +179,21 @@
       .ui-header { left: 4vw; top: 4vh; }
       .physics-card { max-width: calc(100% - 32px); }
     }
+    /* stacked list layout for iPhone or iPad in portrait */
+    .interactive-layer.stacked {
+      display: block;
+      padding: 12px 0;
+    }
+    .interactive-layer.stacked .physics-card {
+      position: static !important;
+      display: flex !important;
+      width: calc(100% - 24px) !important;
+      margin: 8px 12px !important;
+      transform: none !important;
+      left: auto !important;
+      top: auto !important;
+      cursor: pointer !important;
+    }
   </style>
 </head>
 <body>
@@ -362,6 +377,46 @@
       
       updateBoundaries();
 
+      // Detect iPhone or iPad (portrait) to use stacked list layout
+      const ua = navigator.userAgent || '';
+      const isiPhone = /iPhone/.test(ua);
+      const isiPad = /iPad/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      let isPortrait = window.matchMedia('(orientation: portrait)').matches;
+      let isStacked = isiPhone || (isiPad && isPortrait);
+
+      function applyStacking(enable) {
+        const layerEl = document.getElementById('interactive-layer');
+        if (enable) {
+          layerEl.classList.add('stacked');
+          bodiesMap.forEach(item => {
+            Body.setStatic(item.body, true);
+            item.element.style.position = 'static';
+            item.element.style.transform = 'none';
+            item.element.style.left = '';
+            item.element.style.top = '';
+          });
+        } else {
+          layerEl.classList.remove('stacked');
+          bodiesMap.forEach(item => {
+            Body.setStatic(item.body, false);
+            item.element.style.position = 'absolute';
+          });
+        }
+      }
+
+      applyStacking(isStacked);
+
+      function updateStackingOnChange() {
+        isPortrait = window.matchMedia('(orientation: portrait)').matches;
+        const nextStack = isiPhone || (isiPad && isPortrait);
+        if (nextStack !== isStacked) {
+          isStacked = nextStack;
+          applyStacking(isStacked);
+        }
+      }
+      window.addEventListener('orientationchange', updateStackingOnChange);
+      window.addEventListener('resize', updateStackingOnChange);
+
           const layer = document.getElementById('interactive-layer');
           let mouseConstraint = null;
           let dragged = false;
@@ -456,6 +511,7 @@
         }
 
         bodiesMap.forEach((item) => {
+          if (isStacked) return; // CSS handles layout when stacked
           const { element, body, width, height } = item;
           const x = body.position.x - width / 2;
           const y = body.position.y - height / 2;
