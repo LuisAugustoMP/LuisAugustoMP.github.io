@@ -66,7 +66,7 @@
       position: absolute;
       top: 5vh;
       left: 5vw;
-      max-width: 600px;
+      max-width: 800px;
       z-index: 100;
       pointer-events: auto;
     }
@@ -86,6 +86,8 @@
 
     .social-links {
       display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
     .social-btn {
@@ -179,7 +181,8 @@
       .ui-header { left: 4vw; top: 4vh; }
       .physics-card { max-width: calc(100% - 32px); }
     }
-    /* stacked list layout for iPhone or iPad in portrait */
+    
+    /* Layout para iPhone/iPad retrato */
     .interactive-layer.stacked {
       display: block;
       padding-top: var(--stack-padding, 72px);
@@ -223,6 +226,9 @@
         <a href="https://instagram.com/luisaugusto.mp" target="_blank" class="social-btn">
           <i class="fa-brands fa-instagram"></i> Instagram
         </a>
+        <button id="physics-toggle" class="social-btn">
+          <i class="fa-solid fa-magnet"></i> <span>Soltar Grid</span>
+        </button>
       </div>
     </header>
 
@@ -303,55 +309,6 @@
         <span>Botão de teste placeholder.</span>
       </div>
     </a>
-    <a class="physics-card" href="#" data-width="320" data-height="120">
-      <i class="fa-solid fa-star card-icon"></i>
-      <div class="card-content">
-        <h2>Placeholder 4</h2>
-        <span>Botão de teste placeholder.</span>
-      </div>
-    </a>
-    <a class="physics-card" href="#" data-width="320" data-height="120">
-      <i class="fa-solid fa-star card-icon"></i>
-      <div class="card-content">
-        <h2>Placeholder 5</h2>
-        <span>Botão de teste placeholder.</span>
-      </div>
-    </a>
-    <a class="physics-card" href="#" data-width="320" data-height="120">
-      <i class="fa-solid fa-star card-icon"></i>
-      <div class="card-content">
-        <h2>Placeholder 6</h2>
-        <span>Botão de teste placeholder.</span>
-      </div>
-    </a>
-    <a class="physics-card" href="#" data-width="320" data-height="120">
-      <i class="fa-solid fa-star card-icon"></i>
-      <div class="card-content">
-        <h2>Placeholder 7</h2>
-        <span>Botão de teste placeholder.</span>
-      </div>
-    </a>
-    <a class="physics-card" href="#" data-width="320" data-height="120">
-      <i class="fa-solid fa-star card-icon"></i>
-      <div class="card-content">
-        <h2>Placeholder 8</h2>
-        <span>Botão de teste placeholder.</span>
-      </div>
-    </a>
-    <a class="physics-card" href="#" data-width="320" data-height="120">
-      <i class="fa-solid fa-star card-icon"></i>
-      <div class="card-content">
-        <h2>Placeholder 9</h2>
-        <span>Botão de teste placeholder.</span>
-      </div>
-    </a>
-    <a class="physics-card" href="#" data-width="320" data-height="120">
-      <i class="fa-solid fa-star card-icon"></i>
-      <div class="card-content">
-        <h2>Placeholder 10</h2>
-        <span>Botão de teste placeholder.</span>
-      </div>
-    </a>
 
   </div>
 
@@ -382,19 +339,13 @@
 
       starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
       
-      const starMaterial = new THREE.PointsMaterial({ 
-        color: 0xcccccc, 
-        size: 0.05, 
-        transparent: true, 
-        opacity: 0.7 
-      });
-      
+      const starMaterial = new THREE.PointsMaterial({ color: 0xcccccc, size: 0.05, transparent: true, opacity: 0.7 });
       const stars = new THREE.Points(starGeometry, starMaterial);
       scene.add(stars);
 
 
       // ==========================================
-      // 2. MATTER.JS: FÍSICA E GIROSCÓPIO
+      // 2. MATTER.JS: FÍSICA E LAYOUTS
       // ==========================================
       const { Engine, Runner, World, Bodies, Mouse, MouseConstraint, Body } = Matter;
 
@@ -414,15 +365,11 @@
         let w = Math.min(baseW * scaleRatio, window.innerWidth - 32);
         let h = baseH * scaleRatio;
 
-        const startX = (window.innerWidth / 2) + ((Math.random() - 0.5) * window.innerWidth * 0.5);
-        const startY = (window.innerHeight * (isSmallMobile ? 0.22 : 0.3)) + (index * (isSmallMobile ? 28 : 40));
-
-        const body = Bodies.rectangle(startX, startY, w, h, {
+        const body = Bodies.rectangle(window.innerWidth / 2, window.innerHeight / 2, w, h, {
           chamfer: { radius: 12 },
           restitution: 0.6,
           friction: 0.05,
-          frictionAir: 0.02,
-          angle: (Math.random() - 0.5) * 0.3
+          frictionAir: 0.02
         });
 
         World.add(engine.world, body);
@@ -443,38 +390,65 @@
         const w = window.innerWidth;
         const h = window.innerHeight;
 
-        Matter.Body.setPosition(ground, { x: w / 2, y: h + wallThickness / 2 });
-        Matter.Body.setVertices(ground, Bodies.rectangle(w / 2, h + wallThickness / 2, w * 2, wallThickness).vertices);
+        Body.setPosition(ground, { x: w / 2, y: h + wallThickness / 2 });
+        Body.setVertices(ground, Bodies.rectangle(w / 2, h + wallThickness / 2, w * 2, wallThickness).vertices);
 
-        Matter.Body.setPosition(ceiling, { x: w / 2, y: -wallThickness / 2 });
-        Matter.Body.setVertices(ceiling, Bodies.rectangle(w / 2, -wallThickness / 2, w * 2, wallThickness).vertices);
+        Body.setPosition(ceiling, { x: w / 2, y: -wallThickness / 2 });
+        Body.setVertices(ceiling, Bodies.rectangle(w / 2, -wallThickness / 2, w * 2, wallThickness).vertices);
 
-        Matter.Body.setPosition(leftWall, { x: -wallThickness / 2, y: h / 2 });
-        Matter.Body.setVertices(leftWall, Bodies.rectangle(-wallThickness / 2, h / 2, wallThickness, h * 2).vertices);
+        Body.setPosition(leftWall, { x: -wallThickness / 2, y: h / 2 });
+        Body.setVertices(leftWall, Bodies.rectangle(-wallThickness / 2, h / 2, wallThickness, h * 2).vertices);
 
-        Matter.Body.setPosition(rightWall, { x: w + wallThickness / 2, y: h / 2 });
-        Matter.Body.setVertices(rightWall, Bodies.rectangle(w + wallThickness / 2, h / 2, wallThickness, h * 2).vertices);
+        Body.setPosition(rightWall, { x: w + wallThickness / 2, y: h / 2 });
+        Body.setVertices(rightWall, Bodies.rectangle(w + wallThickness / 2, h / 2, wallThickness, h * 2).vertices);
       }
-      
       updateBoundaries();
 
-      // Detect iPhone or iPad (portrait) to use stacked list layout
-      const ua = navigator.userAgent || '';
-      const isiPhone = /iPhone/.test(ua);
-      const isiPad = /iPad/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-      let isPortrait = window.matchMedia('(orientation: portrait)').matches;
-      let isStacked = isiPhone || (isiPad && isPortrait);
+      // ==========================================
+      // 3. GERENCIADOR DE LAYOUTS (STACKED / GRID / PHYSICS)
+      // ==========================================
+      const layerEl = document.getElementById('interactive-layer');
+      const headerEl = document.querySelector('.ui-header');
+      const toggleBtn = document.getElementById('physics-toggle');
+      
+      let currentMode = 'grid'; 
 
-      function applyStacking(enable) {
-        const layerEl = document.getElementById('interactive-layer');
-        const headerEl = document.querySelector('.ui-header');
+      function getGridTargets() {
+        const targets = [];
+        const containerW = window.innerWidth;
+        const headerBottom = headerEl.getBoundingClientRect().bottom;
         
-        if (enable) {
-          // Aumentado o recuo para a lista iniciar com uma margem maior
-          const rect = headerEl.getBoundingClientRect();
-          const pad = Math.round(rect.bottom + 30); 
+        const maxGridWidth = 1200;
+        const gapX = 20;
+        const gapY = 20;
+        const startY = headerBottom + 40; 
+        
+        const refW = bodiesMap[0]?.width || 320;
+        const refH = bodiesMap[0]?.height || 120;
+        
+        const availW = Math.min(containerW - 60, maxGridWidth);
+        const cols = Math.max(1, Math.floor((availW + gapX) / (refW + gapX)));
+        
+        const totalGridW = cols * refW + (cols - 1) * gapX;
+        const startX = (containerW - totalGridW) / 2 + refW / 2;
+
+        bodiesMap.forEach((_, i) => {
+          targets.push({
+            x: startX + (i % cols) * (refW + gapX),
+            y: startY + Math.floor(i / cols) * (refH + gapY)
+          });
+        });
+        return targets;
+      }
+
+      function updateLayoutMode(newMode) {
+        currentMode = newMode;
+
+        if (currentMode === 'stacked') {
+          toggleBtn.style.display = 'none';
+          
+          const pad = Math.round(headerEl.getBoundingClientRect().bottom + 30); 
           layerEl.style.setProperty('--stack-padding', pad + 'px');
-          layerEl.style.overflowY = 'auto';
           layerEl.classList.add('stacked');
           headerEl.classList.add('stacked-header');
 
@@ -482,23 +456,16 @@
             Body.setStatic(item.body, true);
             item.element.style.position = 'static';
             item.element.style.transform = 'none';
-            item.element.style.left = '';
-            item.element.style.top = '';
           });
 
-          // Lógica do fade corrigida para usar o rodapé do cabeçalho
           layerEl.onscroll = () => {
-            const headerBottom = headerEl.getBoundingClientRect().bottom;
-            
-            // Inicia o sumiço antes de bater no cabeçalho
-            const fadeStartY = headerBottom + 20; // 0 de opacidade
-            const fadeEndY = headerBottom + 100;  // 1 de opacidade
+            const hBottom = headerEl.getBoundingClientRect().bottom;
+            const fadeStartY = hBottom + 20; 
+            const fadeEndY = hBottom + 100;  
 
             bodiesMap.forEach(item => {
               const el = item.element;
-              const cardRect = el.getBoundingClientRect();
-              const distFromTop = cardRect.top;
-              
+              const distFromTop = el.getBoundingClientRect().top;
               let opacity = 1;
               if (distFromTop < fadeEndY) {
                 opacity = Math.max(0, (distFromTop - fadeStartY) / (fadeEndY - fadeStartY));
@@ -506,65 +473,109 @@
               el.style.opacity = opacity;
             });
           };
+
         } else {
+          toggleBtn.style.display = 'inline-flex';
           layerEl.classList.remove('stacked');
           layerEl.style.removeProperty('--stack-padding');
-          layerEl.style.overflowY = '';
-          layerEl.onscroll = null; // Limpa o evento de rolagem
           headerEl.classList.remove('stacked-header');
-          
+          layerEl.onscroll = null;
+
+          const toggleText = toggleBtn.querySelector('span');
+          const toggleIcon = toggleBtn.querySelector('i');
+
+          if (currentMode === 'physics') {
+            toggleText.innerText = 'Restaurar Grid';
+            toggleIcon.className = 'fa-solid fa-grip';
+          } else {
+            toggleText.innerText = 'Soltar Grid';
+            toggleIcon.className = 'fa-solid fa-magnet';
+          }
+
           bodiesMap.forEach(item => {
             Body.setStatic(item.body, false);
             item.element.style.position = 'absolute';
             item.element.style.opacity = '1';
+            
+            if (currentMode === 'grid') {
+              item.body.isSensor = true; // Evita colisões enquanto organiza no grid
+            } else {
+              item.body.isSensor = false; 
+              // Impulso leve ao soltar
+              Body.applyForce(item.body, item.body.position, {
+                x: (Math.random() - 0.5) * 0.03,
+                y: (Math.random() * 0.03)
+              });
+            }
           });
         }
       }
 
-      applyStacking(isStacked);
+      toggleBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        updateLayoutMode(currentMode === 'physics' ? 'grid' : 'physics');
+      });
 
-      function updateStackingOnChange() {
-        isPortrait = window.matchMedia('(orientation: portrait)').matches;
-        const nextStack = isiPhone || (isiPad && isPortrait);
-        if (nextStack !== isStacked) {
-          isStacked = nextStack;
-          applyStacking(isStacked);
+      function checkDeviceOrientation() {
+        const ua = navigator.userAgent || '';
+        const isiPhone = /iPhone/.test(ua);
+        const isiPad = /iPad/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isPortrait = window.matchMedia('(orientation: portrait)').matches;
+        
+        const shouldBeStacked = isiPhone || (isiPad && isPortrait);
+        
+        if (shouldBeStacked && currentMode !== 'stacked') {
+          updateLayoutMode('stacked');
+        } else if (!shouldBeStacked && currentMode === 'stacked') {
+          updateLayoutMode('grid');
         }
       }
-      window.addEventListener('orientationchange', updateStackingOnChange);
-      window.addEventListener('resize', updateStackingOnChange);
 
-          const layer = document.getElementById('interactive-layer');
-          let mouseConstraint = null;
-          let dragged = false;
-          if (!isMobile) {
-            const mouse = Mouse.create(layer);
-            mouseConstraint = MouseConstraint.create(engine, {
-              mouse: mouse,
-              constraint: { stiffness: 0.2, render: { visible: false } }
-            });
+      // Interação do mouse apenas funciona se não estivermos no modo GRID puxando
+      let mouseConstraint = null;
+      let dragged = false;
+      if (!isMobile) {
+        const mouse = Mouse.create(layerEl);
+        mouseConstraint = MouseConstraint.create(engine, {
+          mouse: mouse,
+          constraint: { stiffness: 0.2, render: { visible: false } }
+        });
+        mouse.pixelRatio = window.devicePixelRatio;
+        World.add(engine.world, mouseConstraint);
 
-            mouse.pixelRatio = window.devicePixelRatio;
-            World.add(engine.world, mouseConstraint);
+        Matter.Events.on(mouseConstraint, 'startdrag', () => { dragged = true; });
+        Matter.Events.on(mouseConstraint, 'enddrag', () => { setTimeout(() => dragged = false, 50); });
+      }
 
-            Matter.Events.on(mouseConstraint, 'startdrag', () => { dragged = true; });
-            Matter.Events.on(mouseConstraint, 'enddrag', () => { setTimeout(() => dragged = false, 50); });
-          }
-
-          domCards.forEach(card => {
-            card.addEventListener('click', (e) => { if (dragged) e.preventDefault(); });
-          });
+      domCards.forEach(card => {
+        card.addEventListener('click', (e) => { 
+          if (dragged || currentMode === 'grid') { 
+            // Permite o clique natural em Grid ou previne se estiver arrastando
+            if (dragged) e.preventDefault(); 
+          } 
+        });
+      });
 
       Runner.run(Runner.create(), engine);
+
+      // Posiciona imediatamente nos alvos corretos ao carregar para não piscar
+      checkDeviceOrientation();
+      if (currentMode === 'grid') {
+        const initTargets = getGridTargets();
+        bodiesMap.forEach((item, i) => {
+          Body.setPosition(item.body, { x: initTargets[i].x, y: initTargets[i].y });
+        });
+      }
+
 
       // ==========================================
       // 4. RENDER LOOP
       // ==========================================
       function renderLoop() {
+        // Estrelas (fundo)
         const positions = stars.geometry.attributes.position.array;
         for (let i = 0; i < starCount; i++) {
           positions[i * 3 + 2] += 0.08;
-          
           if (positions[i * 3 + 2] > 15) {
             positions[i * 3 + 0] = (Math.random() - 0.5) * 80;
             positions[i * 3 + 1] = (Math.random() - 0.5) * 80;
@@ -573,65 +584,32 @@
         }
         stars.geometry.attributes.position.needsUpdate = true;
         stars.rotation.y += 0.0002;
-
         renderer.render(scene, camera);
 
-        // On very small mobiles, enforce minimum spacing and keep cards inside viewport
-        if (isSmallMobile) {
-          const MIN_GAP = 12; // pixels
-          const MARGIN = 12; // viewport margin
-          // resolve overlaps by translating bodies apart
-          for (let i = 0; i < bodiesMap.length; i++) {
-            for (let j = i + 1; j < bodiesMap.length; j++) {
-              const a = bodiesMap[i];
-              const b = bodiesMap[j];
-              const dx = a.body.position.x - b.body.position.x;
-              const dy = a.body.position.y - b.body.position.y;
-              const overlapX = (a.width + b.width) / 2 + MIN_GAP - Math.abs(dx);
-              const overlapY = (a.height + b.height) / 2 + MIN_GAP - Math.abs(dy);
-              if (overlapX > 0 && overlapY > 0) {
-                if (overlapX < overlapY) {
-                  const push = overlapX / 2 * (dx < 0 ? -1 : 1);
-                  Body.translate(a.body, { x: -push, y: 0 });
-                  Body.translate(b.body, { x: push, y: 0 });
-                } else {
-                  const push = overlapY / 2 * (dy < 0 ? -1 : 1);
-                  Body.translate(a.body, { x: 0, y: -push });
-                  Body.translate(b.body, { x: 0, y: push });
-                }
-              }
-            }
-          }
-
-          // clamp bodies within viewport margins
-          for (let i = 0; i < bodiesMap.length; i++) {
-            const item = bodiesMap[i];
+        // Lógica de Atração Magnética para o Grid
+        if (currentMode === 'grid') {
+          const targets = getGridTargets();
+          bodiesMap.forEach((item, i) => {
             const b = item.body;
-            const halfW = item.width / 2;
-            const halfH = item.height / 2;
-            let cx = b.position.x;
-            let cy = b.position.y;
-            const minX = MARGIN + halfW;
-            const maxX = window.innerWidth - MARGIN - halfW;
-            const minY = MARGIN + halfH;
-            const maxY = window.innerHeight - MARGIN - halfH;
-            if (cx < minX) cx = minX;
-            if (cx > maxX) cx = maxX;
-            if (cy < minY) cy = minY;
-            if (cy > maxY) cy = maxY;
-            if (cx !== b.position.x || cy !== b.position.y) {
-              Body.setPosition(b, { x: cx, y: cy });
-            }
-          }
+            // Lerp (interpolação suave) para a posição do Grid
+            const nx = b.position.x + (targets[i].x - b.position.x) * 0.15;
+            const ny = b.position.y + (targets[i].y - b.position.y) * 0.15;
+            const nAngle = b.angle + (0 - b.angle) * 0.15;
+            
+            Body.setPosition(b, { x: nx, y: ny });
+            Body.setAngle(b, nAngle);
+            Body.setVelocity(b, { x: 0, y: 0 });
+            Body.setAngularVelocity(b, 0);
+          });
         }
 
+        // Aplicação visual do DOM
         bodiesMap.forEach((item) => {
-          if (isStacked) return; // CSS handles layout when stacked
+          if (currentMode === 'stacked') return;
           const { element, body, width, height } = item;
           const x = body.position.x - width / 2;
           const y = body.position.y - height / 2;
-          const angle = body.angle;
-          element.style.transform = `translate(${x}px, ${y}px) rotate(${angle}rad)`;
+          element.style.transform = `translate(${x}px, ${y}px) rotate(${body.angle}rad)`;
         });
 
         requestAnimationFrame(renderLoop);
@@ -641,10 +619,12 @@
 
       window.addEventListener('resize', () => {
         updateBoundaries();
+        checkDeviceOrientation();
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
       });
+      window.addEventListener('orientationchange', checkDeviceOrientation);
 
     });
   </script>
