@@ -362,59 +362,30 @@
       
       updateBoundaries();
 
-      const layer = document.getElementById('interactive-layer');
-      const mouse = Mouse.create(layer);
-      const mouseConstraint = MouseConstraint.create(engine, {
-        mouse: mouse,
-        constraint: { stiffness: 0.2, render: { visible: false } }
-      });
+          const layer = document.getElementById('interactive-layer');
+          let mouseConstraint = null;
+          let dragged = false;
+          if (!isMobile) {
+            const mouse = Mouse.create(layer);
+            mouseConstraint = MouseConstraint.create(engine, {
+              mouse: mouse,
+              constraint: { stiffness: 0.2, render: { visible: false } }
+            });
 
-      mouse.pixelRatio = window.devicePixelRatio;
-      World.add(engine.world, mouseConstraint);
+            mouse.pixelRatio = window.devicePixelRatio;
+            World.add(engine.world, mouseConstraint);
 
-      let dragged = false;
-      Matter.Events.on(mouseConstraint, 'startdrag', () => { dragged = true; });
-      Matter.Events.on(mouseConstraint, 'enddrag', () => { setTimeout(() => dragged = false, 50); });
+            Matter.Events.on(mouseConstraint, 'startdrag', () => { dragged = true; });
+            Matter.Events.on(mouseConstraint, 'enddrag', () => { setTimeout(() => dragged = false, 50); });
+          }
 
-      domCards.forEach(card => {
-        card.addEventListener('click', (e) => { if (dragged) e.preventDefault(); });
-      });
+          domCards.forEach(card => {
+            card.addEventListener('click', (e) => { if (dragged) e.preventDefault(); });
+          });
 
       Runner.run(Runner.create(), engine);
 
-      // ==========================================
-      // 3. EVENTOS: GIROSCÓPIO
-      // ==========================================
-      let isGyroActive = false;
-
-      function handleOrientation(event) {
-        const { gamma, beta } = event;
-        if (gamma === null || beta === null) return;
-        
-        const gravityX = Math.min(Math.max(gamma / 90, -1), 1) * 0.8;
-        const gravityY = Math.min(Math.max(beta / 90, -1), 1) * 0.8;
-
-        engine.world.gravity.x = gravityX;
-        engine.world.gravity.y = gravityY;
-      }
-
-      document.addEventListener('click', () => {
-        if (!isGyroActive) {
-          if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-            DeviceOrientationEvent.requestPermission()
-              .then(permissionState => {
-                if (permissionState === 'granted') {
-                  window.addEventListener('deviceorientation', handleOrientation);
-                  isGyroActive = true;
-                }
-              })
-              .catch(console.error);
-          } else {
-            window.addEventListener('deviceorientation', handleOrientation);
-            isGyroActive = true;
-          }
-        }
-      }, { once: true });
+      // Gyroscope removed to improve touch behavior on mobile devices
 
       // ==========================================
       // 4. RENDER LOOP
