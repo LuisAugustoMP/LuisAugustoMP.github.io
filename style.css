@@ -67,37 +67,43 @@ h1 {
 }
 
 .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 60vh;
+  margin-top: 40px;
 }
 
 .card {
-  position: relative;
-  background: rgba(255, 255, 255, 0.015);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  position: absolute;
+  width: 320px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
-  padding: 32px;
+  padding: 24px;
   text-decoration: none;
   color: inherit;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-              border-color 0.3s ease, 
-              background 0.3s ease, 
-              box-shadow 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 200px;
-  opacity: 0;
-  transform: translateY(30px);
+  min-height: 160px;
+  cursor: grab;
+  user-select: none;
+  z-index: 10;
+  opacity: 1; /* Reset opacity for physics sync */
+  transform: none;
+}
+
+.card:active {
+  cursor: grabbing;
 }
 
 .card.visible {
   opacity: 1;
-  transform: translateY(0);
 }
 
 /* Fallback if IntersectionObserver is not supported or slow */
