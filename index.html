@@ -300,7 +300,7 @@
       // ==========================================
       // 2. MATTER.JS: FÍSICA E GIROSCÓPIO
       // ==========================================
-      const { Engine, Runner, World, Bodies, Mouse, MouseConstraint } = Matter;
+      const { Engine, Runner, World, Bodies, Mouse, MouseConstraint, Body } = Matter;
 
       const engine = Engine.create();
       engine.world.gravity.y = 0.05;
@@ -405,6 +405,55 @@
         stars.rotation.y += 0.0002;
 
         renderer.render(scene, camera);
+
+        // On very small mobiles, enforce minimum spacing and keep cards inside viewport
+        if (isSmallMobile) {
+          const MIN_GAP = 12; // pixels
+          const MARGIN = 12; // viewport margin
+          // resolve overlaps by translating bodies apart
+          for (let i = 0; i < bodiesMap.length; i++) {
+            for (let j = i + 1; j < bodiesMap.length; j++) {
+              const a = bodiesMap[i];
+              const b = bodiesMap[j];
+              const dx = a.body.position.x - b.body.position.x;
+              const dy = a.body.position.y - b.body.position.y;
+              const overlapX = (a.width + b.width) / 2 + MIN_GAP - Math.abs(dx);
+              const overlapY = (a.height + b.height) / 2 + MIN_GAP - Math.abs(dy);
+              if (overlapX > 0 && overlapY > 0) {
+                if (overlapX < overlapY) {
+                  const push = overlapX / 2 * (dx < 0 ? -1 : 1);
+                  Body.translate(a.body, { x: -push, y: 0 });
+                  Body.translate(b.body, { x: push, y: 0 });
+                } else {
+                  const push = overlapY / 2 * (dy < 0 ? -1 : 1);
+                  Body.translate(a.body, { x: 0, y: -push });
+                  Body.translate(b.body, { x: 0, y: push });
+                }
+              }
+            }
+          }
+
+          // clamp bodies within viewport margins
+          for (let i = 0; i < bodiesMap.length; i++) {
+            const item = bodiesMap[i];
+            const b = item.body;
+            const halfW = item.width / 2;
+            const halfH = item.height / 2;
+            let cx = b.position.x;
+            let cy = b.position.y;
+            const minX = MARGIN + halfW;
+            const maxX = window.innerWidth - MARGIN - halfW;
+            const minY = MARGIN + halfH;
+            const maxY = window.innerHeight - MARGIN - halfH;
+            if (cx < minX) cx = minX;
+            if (cx > maxX) cx = maxX;
+            if (cy < minY) cy = minY;
+            if (cy > maxY) cy = maxY;
+            if (cx !== b.position.x || cy !== b.position.y) {
+              Body.setPosition(b, { x: cx, y: cy });
+            }
+          }
+        }
 
         bodiesMap.forEach((item) => {
           const { element, body, width, height } = item;
