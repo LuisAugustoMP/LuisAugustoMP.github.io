@@ -182,7 +182,6 @@
       .physics-card { max-width: calc(100% - 32px); }
     }
     
-    /* Layout para iPhone/iPad retrato */
     .interactive-layer.stacked {
       display: block;
       padding-top: var(--stack-padding, 72px);
@@ -350,7 +349,6 @@
       const { Engine, Runner, World, Bodies, Mouse, MouseConstraint, Body } = Matter;
 
       const engine = Engine.create();
-      // Física mais realista (gravidade da terra)
       engine.world.gravity.y = 1.2;
       engine.world.gravity.x = 0;
 
@@ -368,7 +366,7 @@
 
         const body = Bodies.rectangle(window.innerWidth / 2, window.innerHeight / 2, w, h, {
           chamfer: { radius: 12 },
-          restitution: 0.3, // Menos quicante, mais realista
+          restitution: 0.3, 
           friction: 0.4,
           frictionAir: 0.02
         });
@@ -406,6 +404,21 @@
       updateBoundaries();
 
       // ==========================================
+      // RASTREAMENTO DO MOUSE PARA REPULSÃO
+      // ==========================================
+      let mousePos = { x: -1000, y: -1000 };
+      window.addEventListener('mousemove', (e) => {
+        mousePos.x = e.clientX;
+        mousePos.y = e.clientY;
+      });
+      window.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) {
+          mousePos.x = e.touches[0].clientX;
+          mousePos.y = e.touches[0].clientY;
+        }
+      });
+
+      // ==========================================
       // 3. GERENCIADOR DE LAYOUTS (STACKED / GRID / PHYSICS)
       // ==========================================
       const layerEl = document.getElementById('interactive-layer');
@@ -420,26 +433,52 @@
         const headerBottom = headerEl.getBoundingClientRect().bottom;
         
         const maxGridWidth = 1200;
-        const gapX = 32; // Maior espaçamento horizontal
-        const gapY = 32; // Maior espaçamento vertical
-        const startY = headerBottom + 120; // Rebaixado para dar folga do cabeçalho
+        const gapX = 32;
+        const gapY = 32;
+        const startY = headerBottom + 60; // Folga do cabeçalho
+        const availW = Math.min(containerW - 32, maxGridWidth);
         
-        const refW = bodiesMap[0]?.width || 320;
-        const refH = bodiesMap[0]?.height || 120;
+        // 1. Agrupa os botões em linhas (envelopamento) com base em suas larguras reais
+        const rows = [];
+        let currentRow = [];
+        let currentRowWidth = 0;
+        let currentRowMaxHeight = 0;
         
-        const availW = Math.min(containerW - 60, maxGridWidth);
-        // Calcula colunas com segurança para não sobrepor
-        const cols = Math.max(1, Math.floor(availW / (refW + gapX))); 
-        
-        const totalGridW = cols * refW + (cols - 1) * gapX;
-        const startX = (containerW - totalGridW) / 2 + refW / 2;
-
-        bodiesMap.forEach((_, i) => {
-          targets.push({
-            x: startX + (i % cols) * (refW + gapX),
-            y: startY + Math.floor(i / cols) * (refH + gapY)
-          });
+        bodiesMap.forEach((item) => {
+          const itemW = item.width;
+          if (currentRow.length > 0 && currentRowWidth + gapX + itemW > availW) {
+            rows.push({ items: currentRow, width: currentRowWidth, height: currentRowMaxHeight });
+            currentRow = [item];
+            currentRowWidth = itemW;
+            currentRowMaxHeight = item.height;
+          } else {
+            currentRow.push(item);
+            currentRowWidth += (currentRow.length === 1 ? 0 : gapX) + itemW;
+            currentRowMaxHeight = Math.max(currentRowMaxHeight, item.height);
+          }
         });
+        
+        if (currentRow.length > 0) {
+          rows.push({ items: currentRow, width: currentRowWidth, height: currentRowMaxHeight });
+        }
+        
+        // 2. Calcula as posições X e Y exatas distribuindo cada linha centralizada
+        let currentY = startY;
+        
+        rows.forEach(row => {
+          let currentX = (containerW - row.width) / 2; // Centraliza a linha atual horizontalmente
+          
+          row.items.forEach(item => {
+            targets.push({
+              x: currentX + item.width / 2, // Posicionamento pelo centro do corpo da física
+              y: currentY + item.height / 2 
+            });
+            currentX += item.width + gapX;
+          });
+          
+          currentY += row.height + gapY; // Pula para a próxima linha
+        });
+        
         return targets;
       }
 
@@ -459,29 +498,11 @@
             item.element.style.position = 'static';
             item.element.style.transform = 'none';
           });
-
-          layerEl.onscroll = () => {
-            const hBottom = headerEl.getBoundingClientRect().bottom;
-            const fadeStartY = hBottom + 20; 
-            const fadeEndY = hBottom + 100;  
-
-            bodiesMap.forEach(item => {
-              const el = item.element;
-              const distFromTop = el.getBoundingClientRect().top;
-              let opacity = 1;
-              if (distFromTop < fadeEndY) {
-                opacity = Math.max(0, (distFromTop - fadeStartY) / (fadeEndY - fadeStartY));
-              }
-              el.style.opacity = opacity;
-            });
-          };
-
         } else {
           toggleBtn.style.display = 'inline-flex';
           layerEl.classList.remove('stacked');
           layerEl.style.removeProperty('--stack-padding');
           headerEl.classList.remove('stacked-header');
-          layerEl.onscroll = null;
 
           const toggleText = toggleBtn.querySelector('span');
           const toggleIcon = toggleBtn.querySelector('i');
@@ -503,7 +524,6 @@
               item.body.isSensor = true;
             } else {
               item.body.isSensor = false; 
-              // Impulso mínimo, a gravidade faz o resto do trabalho realista
               Body.applyForce(item.body, item.body.position, {
                 x: (Math.random() - 0.5) * 0.05,
                 y: (Math.random() * 0.02)
@@ -584,8 +604,8 @@
         stars.rotation.y += 0.0002;
         renderer.render(scene, camera);
 
-        // Atração Magnética
         if (currentMode === 'grid') {
+          // Atração magnética do Grid
           const targets = getGridTargets();
           bodiesMap.forEach((item, i) => {
             const b = item.body;
@@ -597,6 +617,23 @@
             Body.setAngle(b, nAngle);
             Body.setVelocity(b, { x: 0, y: 0 });
             Body.setAngularVelocity(b, 0);
+          });
+        } else if (currentMode === 'physics') {
+          // Repulsão do Mouse no modo Física
+          bodiesMap.forEach((item) => {
+            const b = item.body;
+            const dx = b.position.x - mousePos.x;
+            const dy = b.position.y - mousePos.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const maxDist = 250; 
+            
+            if (dist < maxDist && dist > 0) {
+              const forceMagnitude = (maxDist - dist) * 0.0005; 
+              Body.applyForce(b, b.position, {
+                x: (dx / dist) * forceMagnitude,
+                y: (dy / dist) * forceMagnitude
+              });
+            }
           });
         }
 
