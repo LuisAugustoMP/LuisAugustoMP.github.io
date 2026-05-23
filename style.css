@@ -1,22 +1,16 @@
 :root {
-  --bg-color: #ffffff;
-  --text-primary: #1a1a1a;
-  --text-secondary: #666666;
-  --card-bg: rgba(0, 0, 0, 0.02);
-  --card-border: rgba(0, 0, 0, 0.08);
-  --accent-color: #000000;
+  --bg-color: #121214;
+  --text-primary: #e1e1e6;
+  --text-secondary: #a8a8b3;
+  --text-accent: #04d361;
+  --path-accent: #8257e5;
+  
+  --card-bg: rgba(32, 32, 36, 0.6);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --card-hover-border: rgba(255, 255, 255, 0.2);
+  --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  
   --font-main: 'JetBrains Mono', monospace;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-color: #050505;
-    --text-primary: #ffffff;
-    --text-secondary: #a0a0a0;
-    --card-bg: rgba(255, 255, 255, 0.03);
-    --card-border: rgba(255, 255, 255, 0.1);
-    --accent-color: #ffffff;
-  }
 }
 
 * {
@@ -29,9 +23,11 @@ body {
   background-color: var(--bg-color);
   color: var(--text-primary);
   font-family: var(--font-main);
-  line-height: 1.6;
   overflow: hidden;
   height: 100vh;
+  width: 100vw;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 #space-canvas {
@@ -40,128 +36,126 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1;
+  z-index: 0;
   pointer-events: none;
 }
 
-.container {
-  position: relative;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 60px 24px;
+.interactive-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   z-index: 10;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
 }
 
-header {
-  margin-bottom: 40px;
+.ui-header {
+  position: absolute;
+  top: 5vh;
+  left: 5vw;
+  max-width: 600px;
   z-index: 100;
+  pointer-events: auto;
 }
 
-h1 {
-  font-size: 2.5rem;
+.terminal-prompt {
+  font-size: 1.1rem;
   font-weight: 700;
-  letter-spacing: -1px;
-  margin-bottom: 8px;
-  color: var(--text-primary);
+  margin-bottom: 24px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-.subtitle {
-  font-size: 1rem;
-  color: var(--text-secondary);
-  max-width: 500px;
-  margin-bottom: 20px;
-}
+.term-user { color: var(--text-accent); }
+.term-path { color: var(--path-accent); }
+.term-symbol { color: var(--text-primary); }
 
 .social-links {
   display: flex;
-  gap: 12px;
 }
 
 .social-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
+  gap: 10px;
+  padding: 10px 20px;
   background: var(--card-bg);
   border: 1px solid var(--card-border);
-  border-radius: 99px;
+  border-radius: 6px;
   color: var(--text-primary);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .social-btn:hover {
-  background: var(--text-primary);
-  color: var(--bg-color);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--card-hover-border);
 }
 
-.grid {
-  flex: 1;
-  position: relative;
-  width: 100%;
-}
-
-.card {
+.physics-card {
   position: absolute;
-  width: 300px;
+  top: 0; 
+  left: 0;
   background: var(--card-bg);
   border: 1px solid var(--card-border);
-  border-radius: 16px;
-  padding: 24px;
+  border-radius: 12px;
+  padding: 20px;
   text-decoration: none;
   color: inherit;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+  
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--card-shadow);
+  
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 140px;
+  align-items: center;
+  gap: 16px;
+  
   cursor: grab;
-  user-select: none;
   z-index: 50;
   transition: border-color 0.2s ease;
+  will-change: transform;
 }
 
-.card:hover {
-  border-color: var(--text-primary);
+.physics-card:active {
+  cursor: grabbing;
 }
 
-.card h2 {
-  font-size: 1.25rem;
-  margin-bottom: 8px;
-  font-weight: 600;
+.physics-card:hover {
+  border-color: var(--card-hover-border);
 }
 
-.card span {
-  font-size: 0.85rem;
+.card-icon {
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  min-width: 36px;
+  text-align: center;
+}
+
+.card-content h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.card-content span {
+  font-size: 0.8rem;
   color: var(--text-secondary);
+  line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.card .arrow {
-  display: none;
-}
-
-footer {
-  padding: 24px 0;
-  text-align: center;
-  color: var(--text-secondary);
-  font-size: 0.8rem;
-}
-
 @media (max-width: 768px) {
-  h1 {
-    font-size: 2.2rem;
-  }
-  
-  .container {
-    padding: 60px 20px;
-  }
+  .terminal-prompt { font-size: 0.95rem; }
+  .physics-card { padding: 16px; gap: 12px; }
+  .card-icon { font-size: 1.5rem; }
 }

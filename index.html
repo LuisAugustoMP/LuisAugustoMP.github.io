@@ -2,15 +2,13 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>@luisaugustomp</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>@luisaugustomp | Hub</title>
   
-  <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-brands/css/uicons-brands.css">
-  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
   <link rel="stylesheet" href="style.css">
 </head>
@@ -18,83 +16,81 @@
 
   <canvas id="space-canvas"></canvas>
 
-  <div class="container">
-    <header>
-      <h1>@luisaugustomp</h1>
-      <p class="subtitle">Explorando as fronteiras do design e performance através de projetos experimentais.</p>
+  <div class="interactive-layer" id="interactive-layer">
+    
+    <header class="ui-header">
+      <div class="terminal-prompt">
+        <span class="term-user">luisaugusto.mp@Luis-Augusto</span>
+        <span class="term-path">~</span>
+        <span class="term-symbol">%</span>
+      </div>
+      
       <div class="social-links">
         <a href="https://instagram.com/luisaugusto.mp" target="_blank" class="social-btn">
-          <i class="fi fi-brands-instagram"></i> Instagram
+          <i class="fa-brands fa-instagram"></i> Instagram
         </a>
       </div>
     </header>
 
-    <main class="grid">
+    <a class="physics-card" href="/Portfolio/" data-width="320" data-height="120">
+      <i class="fa-solid fa-briefcase card-icon"></i>
+      <div class="card-content">
+        <h2>Portfolio</h2>
+        <span>Vitrine técnica e profissional.</span>
+      </div>
+    </a>
 
-      <a class="card" href="/Portfolio/">
-        <div class="arrow">↗</div>
-        <div>
-          <h2>Portfolio</h2>
-          <span>Experiência profissional e vitrine de habilidades técnicas.</span>
-        </div>
-      </a>
+    <a class="physics-card" href="/mediavault/" data-width="320" data-height="120">
+      <i class="fa-solid fa-photo-film card-icon"></i>
+      <div class="card-content">
+        <h2>mediavault</h2>
+        <span>Gerenciamento inteligente de mídia.</span>
+      </div>
+    </a>
 
-      <a class="card" href="/mediavault/">
-        <div class="arrow">↗</div>
-        <div>
-          <h2>mediavault</h2>
-          <span>Gerenciador de mídia inteligente focado em organização e performance.</span>
-        </div>
-      </a>
+    <a class="physics-card" href="/Ibava-Curso/" data-width="320" data-height="120">
+      <i class="fa-solid fa-graduation-cap card-icon"></i>
+      <div class="card-content">
+        <h2>Ibava-Curso</h2>
+        <span>Plataforma de ensino e acessibilidade.</span>
+      </div>
+    </a>
 
-      <a class="card" href="/Ibava-Curso/">
-        <div class="arrow">↗</div>
-        <div>
-          <h2>Ibava-Curso</h2>
-          <span>Plataforma de ensino online com foco em UX e acessibilidade.</span>
-        </div>
-      </a>
+    <a class="physics-card" href="/sobral-memoria/" data-width="320" data-height="120">
+      <i class="fa-solid fa-landmark card-icon"></i>
+      <div class="card-content">
+        <h2>sobral-memoria</h2>
+        <span>Preservação digital e resgate histórico.</span>
+      </div>
+    </a>
 
-      <a class="card" href="/sobral-memoria/">
-        <div class="arrow">↗</div>
-        <div>
-          <h2>sobral-memoria</h2>
-          <span>Preservação digital e resgate histórico através de interface imersiva.</span>
-        </div>
-      </a>
+    <a class="physics-card" href="/BiofiliaHospitalar/" data-width="320" data-height="120">
+      <i class="fa-solid fa-leaf card-icon"></i>
+      <div class="card-content">
+        <h2>BiofiliaHospitalar</h2>
+        <span>Design biofílico em ambientes de saúde.</span>
+      </div>
+    </a>
 
-      <a class="card" href="/BiofiliaHospitalar/">
-        <div class="arrow">↗</div>
-        <div>
-          <h2>BiofiliaHospitalar</h2>
-          <span>Estudo de caso sobre design biofílico aplicado a ambientes de saúde.</span>
-        </div>
-      </a>
+    <a class="physics-card" href="/curriculo/" data-width="320" data-height="120">
+      <i class="fa-solid fa-id-card card-icon"></i>
+      <div class="card-content">
+        <h2>curriculo</h2>
+        <span>Currículo interativo de alto impacto.</span>
+      </div>
+    </a>
 
-      <a class="card" href="/curriculo/">
-        <div class="arrow">↗</div>
-        <div>
-          <h2>curriculo</h2>
-          <span>Currículo interativo projetado para máxima clareza e impacto visual.</span>
-        </div>
-      </a>
+    <a class="physics-card" href="/PlExport/" data-width="320" data-height="120">
+      <i class="fa-solid fa-server card-icon"></i>
+      <div class="card-content">
+        <h2>PlExport</h2>
+        <span>Automação para bibliotecas Plex.</span>
+      </div>
+    </a>
 
-      <a class="card" href="/PlExport/">
-        <div class="arrow">↗</div>
-        <div>
-          <h2>PlExport</h2>
-          <span>Ferramenta de exportação e automação para bibliotecas Plex.</span>
-        </div>
-      </a>
-
-    </main>
-
-    <footer>
-      <p>© 2026 • Crafted with precision</p>
-    </footer>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.164.1/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <script src="script.js"></script>
 </body>
