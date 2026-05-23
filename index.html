@@ -280,11 +280,33 @@
       </div>
     </a>
 
-    <a class="physics-card" href="https://github.com/LuisAugustoMP/PlExport" data-width="320" data-height="120">
+    <a class="physics-card" href="/PlExport/" data-width="320" data-height="120">
       <i class="fa-solid fa-server card-icon"></i>
       <div class="card-content">
         <h2>PlExport</h2>
-        <span> Exportação de Histórico Plex.</span>
+        <span>Automação para bibliotecas Plex.</span>
+      </div>
+    </a>
+
+    <a class="physics-card" href="#" data-width="320" data-height="120">
+      <i class="fa-solid fa-star card-icon"></i>
+      <div class="card-content">
+        <h2>Placeholder 1</h2>
+        <span>Botão de teste placeholder.</span>
+      </div>
+    </a>
+    <a class="physics-card" href="#" data-width="320" data-height="120">
+      <i class="fa-solid fa-star card-icon"></i>
+      <div class="card-content">
+        <h2>Placeholder 2</h2>
+        <span>Botão de teste placeholder.</span>
+      </div>
+    </a>
+    <a class="physics-card" href="#" data-width="320" data-height="120">
+      <i class="fa-solid fa-star card-icon"></i>
+      <div class="card-content">
+        <h2>Placeholder 3</h2>
+        <span>Botão de teste placeholder.</span>
       </div>
     </a>
 
@@ -328,7 +350,8 @@
       const { Engine, Runner, World, Bodies, Mouse, MouseConstraint, Body } = Matter;
 
       const engine = Engine.create();
-      engine.world.gravity.y = 0.05;
+      // Física mais realista (gravidade da terra)
+      engine.world.gravity.y = 1.2;
       engine.world.gravity.x = 0;
 
       const domCards = document.querySelectorAll('.physics-card');
@@ -345,8 +368,8 @@
 
         const body = Bodies.rectangle(window.innerWidth / 2, window.innerHeight / 2, w, h, {
           chamfer: { radius: 12 },
-          restitution: 0.6,
-          friction: 0.05,
+          restitution: 0.3, // Menos quicante, mais realista
+          friction: 0.4,
           frictionAir: 0.02
         });
 
@@ -354,7 +377,7 @@
         bodiesMap.push({ element: cardEl, body: body, width: w, height: h });
       });
 
-      const wallOptions = { isStatic: true, friction: 0, restitution: 0.4 };
+      const wallOptions = { isStatic: true, friction: 0.5, restitution: 0.2 };
       const wallThickness = 100;
       
       const ground = Bodies.rectangle(0, 0, 0, 0, wallOptions);
@@ -397,15 +420,16 @@
         const headerBottom = headerEl.getBoundingClientRect().bottom;
         
         const maxGridWidth = 1200;
-        const gapX = 20;
-        const gapY = 20;
-        const startY = headerBottom + 40; 
+        const gapX = 32; // Maior espaçamento horizontal
+        const gapY = 32; // Maior espaçamento vertical
+        const startY = headerBottom + 120; // Rebaixado para dar folga do cabeçalho
         
         const refW = bodiesMap[0]?.width || 320;
         const refH = bodiesMap[0]?.height || 120;
         
         const availW = Math.min(containerW - 60, maxGridWidth);
-        const cols = Math.max(1, Math.floor((availW + gapX) / (refW + gapX)));
+        // Calcula colunas com segurança para não sobrepor
+        const cols = Math.max(1, Math.floor(availW / (refW + gapX))); 
         
         const totalGridW = cols * refW + (cols - 1) * gapX;
         const startX = (containerW - totalGridW) / 2 + refW / 2;
@@ -476,13 +500,13 @@
             item.element.style.opacity = '1';
             
             if (currentMode === 'grid') {
-              item.body.isSensor = true; // Evita colisões enquanto organiza no grid
+              item.body.isSensor = true;
             } else {
               item.body.isSensor = false; 
-              // Impulso leve ao soltar
+              // Impulso mínimo, a gravidade faz o resto do trabalho realista
               Body.applyForce(item.body, item.body.position, {
-                x: (Math.random() - 0.5) * 0.03,
-                y: (Math.random() * 0.03)
+                x: (Math.random() - 0.5) * 0.05,
+                y: (Math.random() * 0.02)
               });
             }
           });
@@ -509,7 +533,6 @@
         }
       }
 
-      // Interação do mouse apenas funciona se não estivermos no modo GRID puxando
       let mouseConstraint = null;
       let dragged = false;
       if (!isMobile) {
@@ -528,7 +551,6 @@
       domCards.forEach(card => {
         card.addEventListener('click', (e) => { 
           if (dragged || currentMode === 'grid') { 
-            // Permite o clique natural em Grid ou previne se estiver arrastando
             if (dragged) e.preventDefault(); 
           } 
         });
@@ -536,7 +558,6 @@
 
       Runner.run(Runner.create(), engine);
 
-      // Posiciona imediatamente nos alvos corretos ao carregar para não piscar
       checkDeviceOrientation();
       if (currentMode === 'grid') {
         const initTargets = getGridTargets();
@@ -545,12 +566,11 @@
         });
       }
 
-
       // ==========================================
       // 4. RENDER LOOP
       // ==========================================
       function renderLoop() {
-        // Estrelas (fundo)
+        // Fundo
         const positions = stars.geometry.attributes.position.array;
         for (let i = 0; i < starCount; i++) {
           positions[i * 3 + 2] += 0.08;
@@ -564,12 +584,11 @@
         stars.rotation.y += 0.0002;
         renderer.render(scene, camera);
 
-        // Lógica de Atração Magnética para o Grid
+        // Atração Magnética
         if (currentMode === 'grid') {
           const targets = getGridTargets();
           bodiesMap.forEach((item, i) => {
             const b = item.body;
-            // Lerp (interpolação suave) para a posição do Grid
             const nx = b.position.x + (targets[i].x - b.position.x) * 0.15;
             const ny = b.position.y + (targets[i].y - b.position.y) * 0.15;
             const nAngle = b.angle + (0 - b.angle) * 0.15;
@@ -581,7 +600,6 @@
           });
         }
 
-        // Aplicação visual do DOM
         bodiesMap.forEach((item) => {
           if (currentMode === 'stacked') return;
           const { element, body, width, height } = item;
