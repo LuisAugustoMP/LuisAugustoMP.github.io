@@ -522,19 +522,28 @@
         currentMode = newMode;
 
         if (currentMode === 'stacked') {
-          toggleBtn.style.display = 'inline-flex';
-          const pad = Math.round(headerEl.getBoundingClientRect().bottom + 30); 
-          layerEl.style.setProperty('--stack-padding', pad + 'px');
-          layerEl.classList.add('stacked');
-          headerEl.classList.add('stacked-header');
 
-          bodiesMap.forEach(item => {
-            Body.setStatic(item.body, true);
-            item.element.style.position = 'static';
-            item.element.style.transform = 'none';
-          });
-        } else {
-          toggleBtn.style.display = 'inline-flex';
+      // Esconde o botão no iPhone/mobile
+      toggleBtn.style.display = 'none';
+
+      const pad = Math.round(headerEl.getBoundingClientRect().bottom + 30);
+
+      layerEl.style.setProperty('--stack-padding', pad + 'px');
+      layerEl.classList.add('stacked');
+      headerEl.classList.add('stacked-header');
+
+      // Reseta scroll ao entrar no modo stacked
+      layerEl.scrollTop = 0;
+
+      bodiesMap.forEach(item => {
+        Body.setStatic(item.body, true);
+
+        item.element.style.position = 'static';
+        item.element.style.transform = 'none';
+        item.element.style.opacity = '1';
+      });
+    } else {
+          toggleBtn.style.display = window.innerWidth <= 768 ? 'none' : 'inline-flex';
           layerEl.classList.remove('stacked');
           layerEl.style.removeProperty('--stack-padding');
           headerEl.classList.remove('stacked-header');
