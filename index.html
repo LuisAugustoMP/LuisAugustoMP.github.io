@@ -226,6 +226,45 @@
       top: auto !important;
       cursor: pointer !important;
     }
+    /* Fade progressivo no scroll mobile */
+    .interactive-layer.stacked .physics-card {
+      transition: opacity 0.15s linear;
+    }
+
+    /* Máscara visual suave */
+    .interactive-layer.stacked::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 180px;
+      pointer-events: none;
+      z-index: 99;
+
+      background: linear-gradient(
+        to bottom,
+        rgba(18,18,20,1) 0%,
+        rgba(18,18,20,0.98) 35%,
+        rgba(18,18,20,0.92) 55%,
+        rgba(18,18,20,0.0) 100%
+      );
+    }
+    /* Evita bounce estranho no iOS */
+    html, body {
+      overscroll-behavior: none;
+    }
+
+    /* Scroll mais suave */
+    .interactive-layer.stacked {
+      scroll-behavior: smooth;
+    }
+
+    /* Header sempre acima */
+    .ui-header {
+      isolation: isolate;
+    }
+
   </style>
 </head>
 <body>
@@ -299,35 +338,11 @@
       </div>
     </a>
 
-    <a class="physics-card" href="/PlExport/">
+    <a class="physics-card" href="https://github.com/LuisAugustoMP/PlExport" target="_blank">
       <i class="fa-solid fa-server card-icon"></i>
       <div class="card-content">
         <h2>PlExport</h2>
         <span>Automação para bibliotecas Plex.</span>
-      </div>
-    </a>
-
-    <a class="physics-card" href="#">
-      <i class="fa-solid fa-star card-icon"></i>
-      <div class="card-content">
-        <h2>Placeholder 1</h2>
-        <span>Botão de teste placeholder.</span>
-      </div>
-    </a>
-    
-    <a class="physics-card" href="#">
-      <i class="fa-solid fa-star card-icon"></i>
-      <div class="card-content">
-        <h2>Placeholder 2</h2>
-        <span>Botão de teste placeholder.</span>
-      </div>
-    </a>
-
-    <a class="physics-card" href="#">
-      <i class="fa-solid fa-star card-icon"></i>
-      <div class="card-content">
-        <h2>Placeholder 3</h2>
-        <span>Botão de teste placeholder.</span>
       </div>
     </a>
 
@@ -502,7 +517,7 @@
         currentMode = newMode;
 
         if (currentMode === 'stacked') {
-          toggleBtn.style.display = 'none';
+          toggleBtn.style.display = 'inline-flex';
           const pad = Math.round(headerEl.getBoundingClientRect().bottom + 30); 
           layerEl.style.setProperty('--stack-padding', pad + 'px');
           layerEl.classList.add('stacked');
@@ -659,6 +674,29 @@
           const y = body.position.y - height / 2;
           element.style.transform = `translate(${x}px, ${y}px) rotate(${body.angle}rad)`;
         });
+
+        // ==========================================
+        // FADE DOS CARDS AO PASSAR PELO HEADER
+        // ==========================================
+        if (currentMode === 'stacked') {
+          const headerBottom = headerEl.getBoundingClientRect().bottom;
+
+          bodiesMap.forEach((item) => {
+            const rect = item.element.getBoundingClientRect();
+
+            const fadeStart = headerBottom + 40;
+            const fadeEnd = headerBottom - 40;
+
+            let opacity = 1;
+
+            if (rect.top < fadeStart) {
+              opacity = (rect.top - fadeEnd) / (fadeStart - fadeEnd);
+              opacity = Math.max(0, Math.min(1, opacity));
+            }
+
+            item.element.style.opacity = opacity;
+          });
+        }
 
         requestAnimationFrame(renderLoop);
       }
