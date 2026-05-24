@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Hub" />
   <title>@luisaugustomp | Hub</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -133,6 +136,11 @@
       z-index: 50;
       transition: border-color 0.2s ease;
       will-change: transform;
+      
+      /* Ajuste dinâmico de tamanho com base no conteúdo */
+      width: max-content;
+      min-width: 280px;
+      max-width: 360px;
     }
 
     .physics-card:active {
@@ -148,6 +156,11 @@
       color: var(--text-primary);
       min-width: 36px;
       text-align: center;
+    }
+
+    .card-content {
+      display: flex;
+      flex-direction: column;
     }
 
     .card-content h2 {
@@ -173,13 +186,19 @@
     }
     @media (max-width: 420px) {
       .terminal-prompt { font-size: 0.9rem; }
-      .physics-card { padding: 12px; gap: 8px; border-radius: 10px; }
+      .physics-card { 
+        padding: 12px; 
+        gap: 8px; 
+        border-radius: 10px;
+        min-width: unset;
+        width: calc(100vw - 32px);
+        max-width: calc(100vw - 32px);
+      }
       .card-icon { font-size: 1.2rem; min-width: 28px; }
       .card-content h2 { font-size: 1rem; }
       .card-content span { font-size: 0.75rem; }
       .social-btn { padding: 8px 12px; font-size: 0.8rem; }
       .ui-header { left: 4vw; top: 4vh; }
-      .physics-card { max-width: calc(100% - 32px); }
     }
     
     .interactive-layer.stacked {
@@ -200,6 +219,7 @@
       position: static !important;
       display: flex !important;
       width: calc(100% - 24px) !important;
+      max-width: 100% !important;
       margin: 8px 12px !important;
       transform: none !important;
       left: auto !important;
@@ -214,7 +234,7 @@
 
   <div class="interactive-layer" id="interactive-layer">
     
-    <header class="ui-header">
+    <header class="ui-header" id="ui-header">
       <div class="terminal-prompt">
         <span class="term-user">luisaugusto.mp@Luis-Augusto</span>
         <span class="term-path">~</span>
@@ -231,7 +251,7 @@
       </div>
     </header>
 
-    <a class="physics-card" href="/Portfolio/" data-width="320" data-height="120">
+    <a class="physics-card" href="/Portfolio/">
       <i class="fa-solid fa-briefcase card-icon"></i>
       <div class="card-content">
         <h2>Portfolio</h2>
@@ -239,7 +259,7 @@
       </div>
     </a>
 
-    <a class="physics-card" href="/mediavault/" data-width="320" data-height="120">
+    <a class="physics-card" href="/mediavault/">
       <i class="fa-solid fa-photo-film card-icon"></i>
       <div class="card-content">
         <h2>mediavault</h2>
@@ -247,7 +267,7 @@
       </div>
     </a>
 
-    <a class="physics-card" href="/Ibava-Curso/" data-width="320" data-height="120">
+    <a class="physics-card" href="/Ibava-Curso/">
       <i class="fa-solid fa-graduation-cap card-icon"></i>
       <div class="card-content">
         <h2>Ibava-Curso</h2>
@@ -255,7 +275,7 @@
       </div>
     </a>
 
-    <a class="physics-card" href="/sobral-memoria/" data-width="320" data-height="120">
+    <a class="physics-card" href="/sobral-memoria/">
       <i class="fa-solid fa-landmark card-icon"></i>
       <div class="card-content">
         <h2>sobral-memoria</h2>
@@ -263,7 +283,7 @@
       </div>
     </a>
 
-    <a class="physics-card" href="/BiofiliaHospitalar/" data-width="320" data-height="120">
+    <a class="physics-card" href="/BiofiliaHospitalar/">
       <i class="fa-solid fa-leaf card-icon"></i>
       <div class="card-content">
         <h2>BiofiliaHospitalar</h2>
@@ -271,7 +291,7 @@
       </div>
     </a>
 
-    <a class="physics-card" href="/curriculo/" data-width="320" data-height="120">
+    <a class="physics-card" href="/curriculo/">
       <i class="fa-solid fa-id-card card-icon"></i>
       <div class="card-content">
         <h2>curriculo</h2>
@@ -279,7 +299,7 @@
       </div>
     </a>
 
-    <a class="physics-card" href="/PlExport/" data-width="320" data-height="120">
+    <a class="physics-card" href="/PlExport/">
       <i class="fa-solid fa-server card-icon"></i>
       <div class="card-content">
         <h2>PlExport</h2>
@@ -287,21 +307,23 @@
       </div>
     </a>
 
-    <a class="physics-card" href="#" data-width="320" data-height="120">
+    <a class="physics-card" href="#">
       <i class="fa-solid fa-star card-icon"></i>
       <div class="card-content">
         <h2>Placeholder 1</h2>
         <span>Botão de teste placeholder.</span>
       </div>
     </a>
-    <a class="physics-card" href="#" data-width="320" data-height="120">
+    
+    <a class="physics-card" href="#">
       <i class="fa-solid fa-star card-icon"></i>
       <div class="card-content">
         <h2>Placeholder 2</h2>
         <span>Botão de teste placeholder.</span>
       </div>
     </a>
-    <a class="physics-card" href="#" data-width="320" data-height="120">
+
+    <a class="physics-card" href="#">
       <i class="fa-solid fa-star card-icon"></i>
       <div class="card-content">
         <h2>Placeholder 3</h2>
@@ -342,7 +364,6 @@
       const stars = new THREE.Points(starGeometry, starMaterial);
       scene.add(stars);
 
-
       // ==========================================
       // 2. MATTER.JS: FÍSICA E LAYOUTS
       // ==========================================
@@ -354,15 +375,12 @@
 
       const domCards = document.querySelectorAll('.physics-card');
       const bodiesMap = [];
-      const isMobile = window.innerWidth <= 768;
-      const isSmallMobile = window.innerWidth <= 420;
-      const scaleRatio = isSmallMobile ? 0.6 : isMobile ? 0.85 : 1;
+      const headerEl = document.getElementById('ui-header');
 
-      domCards.forEach((cardEl, index) => {
-        let baseW = parseInt(cardEl.dataset.width);
-        let baseH = parseInt(cardEl.dataset.height);
-        let w = Math.min(baseW * scaleRatio, window.innerWidth - 32);
-        let h = baseH * scaleRatio;
+      // Cria os corpos de física baseados no tamanho EXATO renderizado no DOM
+      domCards.forEach((cardEl) => {
+        let w = cardEl.offsetWidth;
+        let h = cardEl.offsetHeight;
 
         const body = Bodies.rectangle(window.innerWidth / 2, window.innerHeight / 2, w, h, {
           chamfer: { radius: 12 },
@@ -388,12 +406,14 @@
       function updateBoundaries() {
         const w = window.innerWidth;
         const h = window.innerHeight;
+        // O teto físico agora fica logo abaixo do cabeçalho para proteger a UI de sobreposições
+        const headerBottom = headerEl.getBoundingClientRect().bottom + 20;
 
         Body.setPosition(ground, { x: w / 2, y: h + wallThickness / 2 });
         Body.setVertices(ground, Bodies.rectangle(w / 2, h + wallThickness / 2, w * 2, wallThickness).vertices);
 
-        Body.setPosition(ceiling, { x: w / 2, y: -wallThickness / 2 });
-        Body.setVertices(ceiling, Bodies.rectangle(w / 2, -wallThickness / 2, w * 2, wallThickness).vertices);
+        Body.setPosition(ceiling, { x: w / 2, y: headerBottom - wallThickness / 2 });
+        Body.setVertices(ceiling, Bodies.rectangle(w / 2, headerBottom - wallThickness / 2, w * 2, wallThickness).vertices);
 
         Body.setPosition(leftWall, { x: -wallThickness / 2, y: h / 2 });
         Body.setVertices(leftWall, Bodies.rectangle(-wallThickness / 2, h / 2, wallThickness, h * 2).vertices);
@@ -401,7 +421,8 @@
         Body.setPosition(rightWall, { x: w + wallThickness / 2, y: h / 2 });
         Body.setVertices(rightWall, Bodies.rectangle(w + wallThickness / 2, h / 2, wallThickness, h * 2).vertices);
       }
-      updateBoundaries();
+      // Garante que os estilos iniciais sejam computados antes de criar os limites
+      setTimeout(updateBoundaries, 50); 
 
       // ==========================================
       // RASTREAMENTO DO MOUSE PARA REPULSÃO
@@ -419,12 +440,10 @@
       });
 
       // ==========================================
-      // 3. GERENCIADOR DE LAYOUTS (STACKED / GRID / PHYSICS)
+      // 3. GERENCIADOR DE LAYOUTS
       // ==========================================
       const layerEl = document.getElementById('interactive-layer');
-      const headerEl = document.querySelector('.ui-header');
       const toggleBtn = document.getElementById('physics-toggle');
-      
       let currentMode = 'grid'; 
 
       function getGridTargets() {
@@ -433,9 +452,9 @@
         const headerBottom = headerEl.getBoundingClientRect().bottom;
         
         const maxGridWidth = 1200;
-        const gapX = 80; // Espaçamento X significativamente aumentado
-        const gapY = 80; // Espaçamento Y significativamente aumentado
-        const startY = headerBottom + 60; 
+        const gapX = 24; // Espaçamento polido e profissional
+        const gapY = 24; 
+        const startY = headerBottom + 40; 
         const availW = Math.min(containerW - 32, maxGridWidth);
         
         const rows = [];
@@ -473,7 +492,6 @@
             });
             currentX += item.width + gapX;
           });
-          
           currentY += row.height + gapY; 
         });
         
@@ -485,7 +503,6 @@
 
         if (currentMode === 'stacked') {
           toggleBtn.style.display = 'none';
-          
           const pad = Math.round(headerEl.getBoundingClientRect().bottom + 30); 
           layerEl.style.setProperty('--stack-padding', pad + 'px');
           layerEl.classList.add('stacked');
@@ -538,11 +555,11 @@
 
       function checkDeviceOrientation() {
         const ua = navigator.userAgent || '';
-        const isiPhone = /iPhone/.test(ua);
-        const isiPad = /iPad/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isMobileDevice = window.innerWidth <= 768;
         const isPortrait = window.matchMedia('(orientation: portrait)').matches;
         
-        const shouldBeStacked = isiPhone || (isiPad && isPortrait);
+        // Empilha automaticamente apenas se for celular em pé
+        const shouldBeStacked = isMobileDevice && isPortrait;
         
         if (shouldBeStacked && currentMode !== 'stacked') {
           updateLayoutMode('stacked');
@@ -551,6 +568,7 @@
         }
       }
 
+      const isMobile = window.innerWidth <= 768;
       let mouseConstraint = null;
       let dragged = false;
       if (!isMobile) {
@@ -576,19 +594,20 @@
 
       Runner.run(Runner.create(), engine);
 
-      checkDeviceOrientation();
-      if (currentMode === 'grid') {
-        const initTargets = getGridTargets();
-        bodiesMap.forEach((item, i) => {
-          Body.setPosition(item.body, { x: initTargets[i].x, y: initTargets[i].y });
-        });
-      }
+      setTimeout(() => {
+        checkDeviceOrientation();
+        if (currentMode === 'grid') {
+          const initTargets = getGridTargets();
+          bodiesMap.forEach((item, i) => {
+            Body.setPosition(item.body, { x: initTargets[i].x, y: initTargets[i].y });
+          });
+        }
+      }, 100);
 
       // ==========================================
       // 4. RENDER LOOP
       // ==========================================
       function renderLoop() {
-        // Fundo
         const positions = stars.geometry.attributes.position.array;
         for (let i = 0; i < starCount; i++) {
           positions[i * 3 + 2] += 0.08;
@@ -603,7 +622,6 @@
         renderer.render(scene, camera);
 
         if (currentMode === 'grid') {
-          // Atração magnética do Grid
           const targets = getGridTargets();
           bodiesMap.forEach((item, i) => {
             const b = item.body;
@@ -617,7 +635,6 @@
             Body.setAngularVelocity(b, 0);
           });
         } else if (currentMode === 'physics') {
-          // Repulsão do Mouse no modo Física
           bodiesMap.forEach((item) => {
             const b = item.body;
             const dx = b.position.x - mousePos.x;
@@ -655,7 +672,12 @@
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
       });
-      window.addEventListener('orientationchange', checkDeviceOrientation);
+      window.addEventListener('orientationchange', () => {
+        setTimeout(() => {
+          updateBoundaries();
+          checkDeviceOrientation();
+        }, 100);
+      });
 
     });
   </script>
