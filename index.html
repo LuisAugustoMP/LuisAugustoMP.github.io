@@ -142,7 +142,7 @@
             margin: 10px 0;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            background: rgba(1, 4, 9, 0.7);
+            background: rgba(1, 4, 9, 0.85);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             overflow: hidden;
@@ -247,14 +247,7 @@
         
         <div class="section-title">Personal Projects</div>
 
-        <ul class="directory-list">
-            <li class="directory-item">
-                <a href="/others/domino_mex/index.html">
-                    <span class="icon"><i class="fi fi-sr-game-rules"></i></span>
-                    domino_mex/
-                </a>
-                <span class="item-desc">Uma tabela-calculadora e um rápido manual para Dominó Mexicano</span>
-            </li>
+        <ul class="directory-list" id="main-projects">
             <li class="directory-item">
                 <a href="/Verbum/">
                     <span class="icon"><i class="fa-solid fa-book-bible"></i></span>
@@ -325,6 +318,11 @@
                 </a>
                 <span class="item-desc">Automação para bibliotecas Plex.</span>
             </li>
+        </ul>
+
+        <div class="section-title">Other Small Projects</div>
+        <ul class="directory-list" id="others-projects">
+            <!-- Projects from others will be inserted here -->
         </ul>
 
         <div class="footer">
